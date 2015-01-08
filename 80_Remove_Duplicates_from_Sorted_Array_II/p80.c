@@ -6,13 +6,15 @@
  * input
  *   a : sorted array
  *   n : number of the elements in array a
+ *   d : maximum duplicated times in array
  * return
  *   on success return merged number of elements in array a
  *   otherwise return -1;
  */
-int remove_duplicates(int a[], int n)
+int remove_duplicates2(int a[], int n, int d)
 {
 	int i, j;
+	int existed;
 
 	if (a == NULL)
 		return -1;
@@ -20,14 +22,25 @@ int remove_duplicates(int a[], int n)
 	if (n < 0)
 		return -1;
 
+	if (d < 1)
+		return -1;
+
 	if ((n == 0) || (n == 1))
 		return n;
 
 	i = 0;
+	existed = 1;
+
 	for (j = 1; j < n; j++) {
 		if (a[i] != a[j]) {
 			i++;
 			a[i] = a[j];
+			existed = 1;
+		}
+		else if (existed < d) {
+			i++;
+			a[i] = a[j];
+			existed++;
 		}
 	}
 
@@ -166,7 +179,7 @@ int main(int argc, char **argv)
 		write_array(fp_out, a, n);
 		fprintf(fp_out, "->");
 
-		n = remove_duplicates(a, n);
+		n = remove_duplicates2(a, n, 2);
 		if (n >= 0) {
 			write_array(fp_out, a, n);
 			fprintf(fp_out, " n=%d", n);
